@@ -2,12 +2,38 @@
 
 {% block body%}
 <div class="jumbotron jumbotron-fluid" style="background-color: #fff">
-        <div class="container">
-          <h1 class="display-4">{{ region }} 미식 리스트</h1>
-          <p class="lead mt-3">미식연합 회원들의 선택을 받은 {{ region }}의 식당들</p>
+  <div class="container">
+    <h1 class="display-4">{{ region }} 미식 리스트</h1>
+    <p class="lead mt-3">미식연합 회원들의 선택을 받은 {{ region }}의 식당들</p>
+  </div>
+</div>
+</div>
+<div class="container">
+  <div class="row">
+
+
+    <div class="card mb-3" style="max-width: 100%;">
+      <div class="row no-gutters">
+        <div class="col-md-4 col-xl-4">
+          {% load staticfiles %}
+          <img src="{% static 'main/Tandoori.jpg' %}" class="card-img" alt="...">
+        </div>
+        <div class="col-md-8 col-xl-8">
+          <div class="card-body" >
+            <h3 class="card-title">행복한 순정 감자탕</h3>
+            <hr>
+            <p class="card-text">어쩌구 젂쩌구 저쩌구 불라불라불라</p>
+            <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+            <h3 class="text-right"><i class="fas fa-utensils mr-1"></i><tab><i class="fas fa-utensils"></i></h3>
+          </div>
         </div>
       </div>
     </div>
 
+
+   
+    </div>
+  </div>
+</div>
 
 {% endblock %}
