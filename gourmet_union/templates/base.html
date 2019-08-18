@@ -1,72 +1,48 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>미식 연합</title>
+
+    <!-- 부트스트랩  -->
+
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link href="https://fonts.googleapis.com/css?family=Noto+Sans+KR&display=swap" rel="stylesheet">
     <link href="https://getbootstrap.com/docs/4.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="http://maps.googleapis.com/maps/api/js"></script>
 
-    <script>
+    <!-- 구글폰트 -->
 
-        function initialize() {
+    <link href="https://fonts.googleapis.com/css?family=Noto+Sans+KR&display=swap" rel="stylesheet">
 
+<style>
+    @media (min-width: 768px) {
+        div.dg-map > svg {
+        width: 600px;
+        height: 600px;
+      }
+    }
+    @media (min-width: 960px) {
+        div.dg-map > svg {
+        width: 800px;
+        height: 800px;
+      }
+    }
+    @media (min-width:1200px) {
+        div.dg-map > svg {
+        width: 1200px;
+        height: 1200px;
+      }
+    }
+</style>
 
-
-            var LatLng = new google.maps.LatLng(37.506736, 126.783362);
-
-            var mapProp = {
-
-                center: LatLng, // 위치
-
-                zoom: 5, // 어느정도까지 세세하게 볼 것인지.
-
-                mapTypeId: google.maps.MapTypeId.ROADMAP
-
-            };
-
-            var map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
-
-
-
-
-
-            var marker = new google.maps.Marker({
-
-                position: LatLng,
-
-                map: map,
-
-
-
-            });
-
-        }
-
-        google.maps.event.addDomListener(window, 'load', initialize);
-
-    </script>
-    <style>
-            .province {
-                fill: #eee;
-                stroke: #999;
-            }
-            text {
-                font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-                font-size: 10px;
-                text-anchor: middle;
-            }
-          </style>
 </head>
 
 <body>
     <div class="container">
-        <nav class="navbar navbar-expand-lg navbar-light bg-white">
+        <nav id="first" class="navbar navbar-expand-lg navbar-light bg-white">
             <a class="navbar-brand" href="/">미식연합</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -76,10 +52,10 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item active">
-                        <a class="nav-link" href="#">홈 <span class="sr-only">(current)</span></a>
+                        <a class="nav-link" href="#">인기 식당<span class="sr-only">(current)</span></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">레이팅</a>
+                        <a class="nav-link" href="#">나의 식당</a>
                     </li>
                     <li class="nav-item dropdown">
 
@@ -104,7 +80,7 @@
                     </li>
                 </ul>
                 <form class="form-inline my-2 my-lg-0">
-                    <input class="form-control mr-sm-2" type="search" placeholder="우리동네 맛집검색" aria-label="Search">
+                    <input class="form-control mr-sm-2" type="search" placeholder="식당 이름으로 검색" aria-label="Search">
                     <button class="btn btn-outline-success my-2 my-sm-0" type="submit">검색</button>
                 </form>
             </div>
@@ -112,8 +88,19 @@
 
         {% block body%}
         {% endblock %}
-
+        </div>
+        <footer class="text-muted">
+                <div class="container">
+                  <p class="float-right">
+                    <a href="#first">우로위로</a>
+                  </p>
+                  <p>&copy; Kimbyungchul</p>
+                  </div>
+              </footer>
 </body>
+
+<!-- 부트스트랩 -->
+
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
     integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
     crossorigin="anonymous"></script>
@@ -123,40 +110,95 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
     integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
     crossorigin="anonymous"></script>
+
+<!-- d3 라이브러리 : 이미지와 데이터 바인딩 -->
+
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script src="http://d3js.org/topojson.v0.min.js"></script>
+
 <script>
+        /*지도*/
+          $(".dg-map svg").mouseover(function(event) {
+            var _path = event.target;
+            var city_name = _path.id;
+            var new_p = document.createElement('p');
+            var province = $(_path).parent()[0].id;
+            d3.select(_path).style("fill", "rgb(217, 255, 0)");
+            d3.select(_path).style("stroke", 'text')
+            //console.log(city_name);
+          }).mouseout(function(event) {
+            var _path = event.target;
+            d3.select(_path).style("fill", "#fff");
+          });
+        
+          function go_branch(city_do) {
+            var Arr = Array("sejong","chungnam","jeju","gyeongnam","gyeongbuk","jeonbuk","chungbuk","gangwon","gyeonggi","jeonnam","ulsan","busan","daegu","daejeon","incheon","seoul","gwangju");
+            var strArr = Array("세종특별자치시","충청남도","제주특별자치도","경상남도","경상북도","전라북도","충청북도","강원도","경기도","전라남도","울산광역시","부산광역시","대구광역시","대전광역시","인천광역시","서울특별시","광주광역시");
+            //alert(city_do);
+            var idx = Arr.indexOf(city_do);
+            //alert(strArr[idx]);
+            location.href="./location/"+strArr[idx];
+          }
+        
+          /*지도 색칠*/
+          $(document).ready(function(){
+            var mapCondition = '<?=$stx?>';
+            if (mapCondition == '세종특별자치시') {
+              $('#sejong').css("fill", "#cbc3ac");
+            }else if (mapCondition == '충청남도') {
+              $('#chungnam').css("fill", "#cbc3ac");
+            }else if (mapCondition =='제주특별자치도') {
+              $('#jeju').css("fill", "#cbc3ac");
+            }else if (mapCondition =='경상남도') {
+              $('#gyeongnam').css("fill", "#cbc3ac");
+            }else if (mapCondition == '경상북도') {
+              $('#gyeongbuk').css("fill", "#cbc3ac");
+            }else if (mapCondition =='전라북도') {
+              $('#jeonbuk').css("fill", "#cbc3ac");
+            }else if (mapCondition =='충청북도') {
+              $('#chungbuk').css("fill", "#cbc3ac");
+            }else if (mapCondition =='경기도') {
+              $('#gyeonggi').css("fill", "#cbc3ac");
+            }else if (mapCondition == '전라남도') {
+              $('#jeonnam').css("fill", "#cbc3ac");
+            }else if (mapCondition =='울산광역시') {
+              $('#ulsan').css("fill", "#cbc3ac");
+            }else if (mapCondition =='부산광역시') {
+              $('#busan').css("fill", "#cbc3ac");
+            }else if (mapCondition == '대구광역시') {
+              $('#daegu').css("fill", "#cbc3ac");
+            }else if (mapCondition =='대전광역시') {
+              $('#daejeon').css("fill", "#cbc3ac");
+            }else if (mapCondition =='인천광역시') {
+              $('#incheon').css("fill", "#cbc3ac");
+            }else if (mapCondition =='서울특별시') {
+              $('#seoul').css("fill", "#cbc3ac");
+            }else if (mapCondition =='광주광역시') {
+              $('#gwangju').css("fill", "#cbc3ac");
+            }
+          })
+        </script>
 
-		var w = 960, h = 500;
+<!-- 구글지도  -->
 
-		var proj = d3.geo.mercator()
-			.center([128.0, 35.9])
-			.scale(4000)
-			.translate([w / 2, h / 2]);
+<script src="http://maps.googleapis.com/maps/api/js"></script>
+<script>
+    function initialize() {
+        var LatLng = new google.maps.LatLng(37.506736, 126.783362);
+        var mapProp = {
+            center: LatLng, // 위치
+            zoom: 5, // 어느정도까지 세세하게 볼 것인지.
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+        var map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
 
-		var path = d3.geo.path().projection(proj);
+        var marker = new google.maps.Marker({
+            position: LatLng,
+            map: map,
+        });
+    }
+    google.maps.event.addDomListener(window, 'load', initialize);
+</script>
 
-		var svg = d3.select("body").append("svg")
-			.attr("width", w)
-			.attr("height", h);
-
-		d3.json("skorea-provinces-topo.json", function (error, kor) {
-
-			var provinces = topojson.object(kor, kor.objects['skorea-provinces-geo']);
-
-			svg.append("path")
-				.datum(provinces)
-				.attr("class", "province")
-				.attr("d", path);
-
-			svg.selectAll("text")
-				.data(provinces.geometries)
-				.enter().append("text")
-				.attr("transform", function (d) { return "translate(" + path.centroid(d) + ")"; })
-				.attr("dy", ".35em")
-				.text(function (d) { return d.properties.NAME_1; });
-
-		});
-	</script>
 
 </html>

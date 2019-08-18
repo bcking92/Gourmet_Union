@@ -1,24 +1,15 @@
 {% extends 'base.html' %}
 
 
-<style>
-		.province {
-			fill: #eee;
-			stroke: #999;
-		}
-		text {
-			font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-			font-size: 10px;
-			text-anchor: middle;
-		}
-	  </style>
 {% block body%}
 
+<!-- {% load staticfiles %} -->
+<!-- <link rel="stylesheet" href="{% static 'map.css' %}"> -->
 <link rel="stylesheet" href="../../gourmet_union/css/style.css">
 <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/album/">
 
 <div class="bd-example">
-	<div class="row">
+	<!-- <div class="row">
 		<div id="carouselExampleCaptions" class="carousel slide" data-ride="carousel">
 			<ol class="carousel-indicators">
 				<li data-target="#carouselExampleCaptions" data-slide-to="0" class="active"></li>
@@ -60,50 +51,21 @@
 				<span class="carousel-control-next-icon" aria-hidden="true"></span>
 				<span class="sr-only">Next</span>
 			</a>
-		</div>
+		</div> -->
 
-	</div>
+
+	<div class="row"></div>
+			<div class="dg-map-area col-xl-12 col-12">
+		{% include '_map.html' %}
+		</div>
+</div>
+	
 </div>
 <!-- <div class="row">
 	  <div id="googleMap" class="mt-3 col-xl-12" style="width:500px;height:380px;"></div>
 	</div> -->
-<div class="row">
-	<script>
 
-		var w = 960, h = 500;
-
-		var proj = d3.geo.mercator()
-			.center([128.0, 35.9])
-			.scale(4000)
-			.translate([w / 2, h / 2]);
-
-		var path = d3.geo.path().projection(proj);
-
-		var svg = d3.select("body").append("svg")
-			.attr("width", w)
-			.attr("height", h);
-
-		d3.json("skorea-provinces-topo.json", function (error, kor) {
-
-			var provinces = topojson.object(kor, kor.objects['skorea-provinces-geo']);
-
-			svg.append("path")
-				.datum(provinces)
-				.attr("class", "province")
-				.attr("d", path);
-
-			svg.selectAll("text")
-				.data(provinces.geometries)
-				.enter().append("text")
-				.attr("transform", function (d) { return "translate(" + path.centroid(d) + ")"; })
-				.attr("dy", ".35em")
-				.text(function (d) { return d.properties.NAME_1; });
-
-		});
-	</script>
 </div>
-</div>
-
 
 
 

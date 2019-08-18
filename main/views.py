@@ -13,3 +13,10 @@ def signin(request):
 
     }
     return render(request, 'signin.html', context)
+
+def location(request,region):
+    context = {
+        'region' : region,
+
+    }
+    return render(request, 'location.html', context)
