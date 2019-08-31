@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<div class="container mt-5">
+    <div class="row text-center">
+        <h1> {{ restuarant.name }} </h1>
+    </div>
+    <div class="row"> <h3>{{ restuarant.address }}</h3></div>
+    <div class="row"> <pre><h3>{{ restuarant.food_type }}</h3>  <h3>{{ restuarant.service_time }}</h3></pre> </div>
+    <div class="row"><pre><h3>{{ restuarant.ratings }}</h3>  <h3>{{ restuarant.phone }}</h3></pre></div>
+    <div class="row"><h3>{{ restuarant.description }}</h3></div>
+</div>
+
+
+
+
+
+
+{% endblock %}
+name = models.CharField(max_length=100)
+ratings = models.FloatField()
+address = models.TextField()
+food_type = models.CharField(max_length=50)
+phone = models.CharField(max_length=20)
+service_time = models.TextField()
+description = models.TextField()
